@@ -1,0 +1,67 @@
+<main class="page">
+  <header class="intro">
+    <h1>What’s the time?</h1>
+    <p class="tagline">Your whole life, squeezed into a single day. Born at midnight, gone at the next.</p>
+  </header>
+
+  <section class="clock-card">
+    <app-clock-face [dayMs]="clock()?.dayMs ?? 0" [isPm]="(clock()?.hours ?? 0) % 24 >= 12" />
+
+    <div class="digital" [class.dim]="!clock()">
+      <span class="digits">{{ digital().time }}</span>
+      <span class="meridiem">{{ digital().meridiem }}</span>
+    </div>
+
+    @if (headline(); as text) {
+      <p class="headline" aria-live="polite">{{ text }}</p>
+    } @else {
+      <p class="headline muted">Enter your birthday to find out what time it is.</p>
+    }
+  </section>
+
+  <section class="inputs">
+    <label class="field">
+      <span>Your birthday</span>
+      <input type="date" [value]="birthday()" [max]="today" (input)="onBirthday($event)" />
+    </label>
+    <label class="field">
+      <span>Age you expect to live to</span>
+      <input
+        type="number"
+        inputmode="numeric"
+        [value]="lifespan()"
+        [min]="minLifespan"
+        [max]="maxLifespan"
+        step="1"
+        (input)="onLifespan($event)"
+      />
+    </label>
+  </section>
+
+  @if (error(); as message) {
+    <p class="error" role="alert">{{ message }}</p>
+  }
+
+  @if (stats(); as s) {
+    <dl class="stats">
+      <div>
+        <dt>Your age</dt>
+        <dd>{{ s.age }}</dd>
+      </div>
+      <div>
+        <dt>Day elapsed</dt>
+        <dd>{{ s.percent }}%</dd>
+      </div>
+      <div>
+        <dt>1 clock-minute</dt>
+        <dd>{{ s.perMinute }}</dd>
+      </div>
+      <div>
+        <dt>1 clock-hour</dt>
+        <dd>{{ s.perHour }}</dd>
+      </div>
+    </dl>
+  }
+
+  <footer class="footer">Saved only in your browser. Nothing leaves this device.</footer>
+</main>

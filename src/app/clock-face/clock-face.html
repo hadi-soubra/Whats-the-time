@@ -1,0 +1,53 @@
+<svg class="clock-face" viewBox="0 0 200 200" role="img" aria-label="Analog clock showing your life time">
+  <defs>
+    <radialGradient id="dial" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" class="dial-light" />
+      <stop offset="100%" class="dial-dark" />
+    </radialGradient>
+    <linearGradient id="bezel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" class="bezel-light" />
+      <stop offset="50%" class="bezel-mid" />
+      <stop offset="100%" class="bezel-dark" />
+    </linearGradient>
+  </defs>
+
+  <circle cx="100" cy="100" r="98" fill="url(#bezel)" />
+  <circle cx="100" cy="100" r="90" fill="url(#dial)" class="dial" />
+  <circle cx="100" cy="100" r="86" class="inner-ring" />
+
+  @for (tick of ticks; track tick.angle) {
+    <line
+      x1="100"
+      [attr.y1]="tick.major ? 16 : 17"
+      x2="100"
+      [attr.y2]="tick.major ? 24 : 20"
+      [class]="tick.major ? 'tick major' : 'tick'"
+      [attr.transform]="'rotate(' + tick.angle + ' 100 100)'"
+    />
+  }
+
+  @for (n of numerals; track n.label) {
+    <text [attr.x]="n.x" [attr.y]="n.y" class="numeral" text-anchor="middle" dominant-baseline="central">
+      {{ n.label }}
+    </text>
+  }
+
+  <rect x="88" y="130" width="24" height="12" rx="2" class="meridiem-window" />
+  <text x="100" y="136.5" class="meridiem" text-anchor="middle" dominant-baseline="central">
+    {{ isPm() ? 'PM' : 'AM' }}
+  </text>
+
+  <g [attr.transform]="'rotate(' + hourAngle() + ' 100 100)'">
+    <path d="M100 108 L96.5 100 L100 52 L103.5 100 Z" class="hand hour" />
+  </g>
+  <g [attr.transform]="'rotate(' + minuteAngle() + ' 100 100)'">
+    <path d="M100 110 L97.5 100 L100 28 L102.5 100 Z" class="hand minute" />
+  </g>
+  <g [attr.transform]="'rotate(' + secondAngle() + ' 100 100)'">
+    <line x1="100" y1="118" x2="100" y2="22" class="hand second" />
+    <circle cx="100" cy="114" r="3" class="hand-second-tail" />
+  </g>
+
+  <circle cx="100" cy="100" r="4.5" class="pin" />
+  <circle cx="100" cy="100" r="1.6" class="pin-center" />
+</svg>
